@@ -4,3 +4,13 @@
 [submodule "src/cf-mysql-release"]
 	path = src/cf-mysql-release
 	url = https://github.com/cloudfoundry/cf-mysql-release.git
+[submodule "src/bosh"]
+	path = src/bosh
+	url = https://github.com/cloudfoundry/bosh
+[submodule "src/kubernetes-cpi-release"]
+	path = src/kubernetes-cpi-release
+	url = git@github.ibm.com:Bluemix/kubernetes-cpi-release.git
+[submodule "src/bosh-softlayer-cpi-release"]
+	path = src/bosh-softlayer-cpi-release
+	url = https://github.com/cloudfoundry/bosh-softlayer-cpi-release
+	branch = bosh_community

@@ -1,0 +1,47 @@
+---
+properties:
+  fissile:
+    monit:
+      user: admin
+      port: 2289
+  director:
+    cpi_job: softlayer_cpi
+    address: 127.0.0.1
+    name: bosh
+    db:
+      host: postgres
+    user_management:
+      local:
+        users:
+        - name: admin
+          password: admin
+  blobstore:
+    address: blobstore
+    host: blobstore
+    agent:
+      user: agent
+    director:
+      user: director
+  nats:
+    http:
+      user: nats_http
+    address: nats
+    user: nats_user
+  dns:
+    address: powerdns
+    local_address: 127.0.0.1
+    query_local_address: 127.0.0.1
+    db:
+      host: postgres
+  registry:
+    address: registry
+    db:
+      database: bosh
+      host: postgres
+    host: registry
+    username: registry
+  softlayer:
+    api_key: *
+    username: cuixuex@cn.ibm.com
+  postgres:
+    listen_address: 0.0.0.0

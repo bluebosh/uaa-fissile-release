@@ -1,0 +1,34 @@
+---
+properties:
+  fissile:
+    monit:
+      user: admin
+      port: 2289
+  director:
+    cpi_job: kubernetes_cpi
+    address: 127.0.0.1
+    name: bosh
+    user_management:
+      local:
+        users:
+        - name: admin
+          password: admin
+  blobstore:
+    address: bosh.bosh3.svc.cluster.local
+    host: bosh.bosh3.svc.cluster.local
+    agent:
+      user: agent
+    director:
+      user: director
+  nats:
+    http:
+      user: nats_http
+    address: 127.0.0.1
+    user: nats_user
+  dns:
+    address: 127.0.0.1
+    local_address: 127.0.0.1
+    query_local_address: 127.0.0.1
+  postgres:
+    listen_address: 0.0.0.0
+  kubeconfig: kubeconfig

@@ -1,0 +1,76 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    skiff-role-name: blobstore
+  name: blobstore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      skiff-role-name: blobstore
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        skiff-role-name: blobstore
+      name: blobstore
+    spec:
+      containers:
+      - env:
+        - name: BLOB_AGENT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: blob-agent-password
+              name: secret-1
+        - name: BLOB_DIRECTOR_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: blob-director-password
+              name: secret-1
+        - name: MONIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: monit-password
+              name: secret-1
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: bluebosh/bosh-blobstore:latest
+        livenessProbe:
+          initialDelaySeconds: 600
+          tcpSocket:
+            port: 2289
+        name: blobstore
+        ports:
+        - containerPort: 25250
+          name: blobstore
+          protocol: TCP
+        readinessProbe:
+          tcpSocket:
+            port: 25250
+        resources: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: blobstore
+spec:
+  ports:
+  - name: blobstore
+    port: 25250
+    protocol: TCP
+    targetPort: blobstore
+  selector:
+    skiff-role-name: blobstore
+  type: ClusterIP
+status:
+  loadBalancer: {}

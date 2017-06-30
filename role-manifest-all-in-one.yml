@@ -1,0 +1,155 @@
+---
+roles:
+- name: bosh
+  jobs:
+  - name: global-properties # needs to be first so images use it for processing monit templates
+    release_name: hcf
+  - name: nats
+    release_name: bosh
+  - name: director
+    release_name: bosh
+  - name: blobstore
+    release_name: bosh
+  - name: powerdns
+    release_name: bosh
+  - name: postgres-9.4
+    release_name: bosh
+  - name: kubernetes_cpi
+    release_name: kubernetes-cpi
+  processes:
+  - director
+  - blobstore
+  - nats
+  - postgres
+  - powerdns
+  run:
+    scaling:
+      min: 1
+      max: 3
+    capabilities: []
+    persistent-volumes:
+    - path: /var/vcap/store
+      tag: disk-eb97d5f7-85d5-4537-651f-ec74b8cf383d
+      size: 20 # parsecs
+    shared-volumes: []
+    memory: 4096
+    virtual-cpus: 4
+    exposed-ports:
+      - name: director
+        protocol: TCP
+        external: 25555
+        internal: 25555
+        public: true
+      - name: director_backend
+        protocol: TCP
+        external: 25556
+        internal: 25556
+        public: true
+      - name: blobstore
+        protocol: TCP
+        external: 25250
+        internal: 25250
+        public: true
+      - name: nats
+        protocol: TCP
+        external: 4222
+        internal: 4222
+        public: true
+      - name: powerdns
+        protocol: TCP
+        external: 8081
+        internal: 8081
+        public: true
+      - name: postgres
+        protocol: TCP
+        external: 5432
+        internal: 5432
+        public: true
+      - name: dns-tcp
+        protocol: TCP
+        external: 53
+        internal: 53
+        public: true
+      - name: dns-udp
+        protocol: UDP
+        external: 53
+        internal: 53
+        public: true
+configuration:
+  variables:
+  - name: BLOB_AGENT_PASSWORD
+    secret: true
+    immutable: true
+    generator:
+      type: Password
+    description: The password for blob agent.
+    required: true
+  - name: BLOB_DIRECTOR_PASSWORD
+    secret: true
+    immutable: true
+    generator:
+      type: Password
+    description: The password for blob director.
+    required: true
+  - name: DIRECTOR_CERT
+    secret: true
+    generator:
+      id: "director_cert"
+      type: Certificate
+      value_type: certificate
+    description: The server's ssl certificate. The default is a self-signed certificate and should always be replaced for production deployments.
+  - name: DIRECTOR_KEY
+    secret: true
+    generator:
+      id: "director_cert"
+      type: Certificate
+      value_type: private_key
+      key_length: 4096
+    description: The server's ssl private key. Only passphrase-less keys are supported.
+  - name: MONIT_PASSWORD
+    secret: true
+    immutable: true
+    generator:
+      type: Password
+    description: Password used for the monit API.
+  - name: NATS_HTTP_PASSWORD
+    secret: true
+    immutable: true
+    generator:
+      type: Password
+    description: The password for the nats http user.
+    required: true
+  - name: NATS_PASSWORD
+    secret: true
+    immutable: true
+    generator:
+      type: Password
+    description: The password for the nats user.
+    required: true
+  - name: POSTGRES_PASSWORD
+    secret: true
+    immutable: true
+    generator:
+      type: Password
+    description: The password for the postgres user.
+    required: true
+  - name: WEBSERVER_PASSWORD
+    secret: true
+    immutable: true
+    generator:
+      type: Password
+    description: The password for the webserver.
+    required: true
+  templates:
+    properties.fissile.monit.password: '"((MONIT_PASSWORD))"'
+    properties.nats.password: '"((NATS_PASSWORD))"'
+    properties.dns.db.password: '"((POSTGRES_PASSWORD))"'
+    properties.dns.webserver.password: '((WEBSERVER_PASSWORD))'
+    properties.director.db.password: '"((POSTGRES_PASSWORD))"'
+    properties.director.ssl.cert: ((DIRECTOR_CERT))
+    properties.director.ssl.key: ((DIRECTOR_KEY))
+    properties.blobstore.agent.password: '"((BLOB_AGENT_PASSWORD))"'
+    properties.blobstore.director.password: '"((BLOB_DIRECTOR_PASSWORD))"'
+    properties.agent.mbus: '"nats://nats_user:((NATS_PASSWORD))@bosh.bosh3.svc.cluster.local:4222"'
+    properties.nats.http.password: '"((NATS_HTTP_PASSWORD))"'
+    properties.postgres.password: '"((POSTGRES_PASSWORD))"'

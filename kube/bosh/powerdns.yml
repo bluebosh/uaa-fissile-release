@@ -1,0 +1,76 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    skiff-role-name: powerdns
+  name: powerdns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      skiff-role-name: powerdns
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        skiff-role-name: powerdns
+      name: powerdns
+    spec:
+      containers:
+      - env:
+        - name: MONIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: monit-password
+              name: secret-1
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: postgres-password
+              name: secret-1
+        - name: WEBSERVER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: webserver-password
+              name: secret-1
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: bluebosh/bosh-powerdns:latest
+        livenessProbe:
+          initialDelaySeconds: 600
+          tcpSocket:
+            port: 2289
+        name: powerdns
+        ports:
+        - containerPort: 8081
+          name: powerdns
+          protocol: TCP
+        readinessProbe:
+          tcpSocket:
+            port: 8081
+        resources: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: powerdns
+spec:
+  ports:
+  - name: powerdns
+    port: 8081
+    protocol: TCP
+    targetPort: powerdns
+  selector:
+    skiff-role-name: powerdns
+  type: ClusterIP
+status:
+  loadBalancer: {}

@@ -1,10 +1,10 @@
 /work-dir/
-/env/certs.env
 /kube-test/bosh/
 /kube-test/bosh-task/
 .dev_builds/
 /src/*-release/config/dev.yml
 /src/*-release/dev_releases/
-/kube
 /*.zip
+/.idea
+/.DS_Store
 uaa_metrics.csv

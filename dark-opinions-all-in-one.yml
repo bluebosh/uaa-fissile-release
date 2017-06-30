@@ -1,0 +1,25 @@
+---
+properties:
+  fissile:
+    monit:
+      password: ~
+  nats:
+    http:
+      password: ~
+    password: ~
+  dns:
+    db:
+      password: ~
+    webserver:
+      password: ~
+  director:
+    db:
+      password: ~
+  blobstore:
+    agent:
+      password: ~
+  blobstore:
+    director:
+      password: ~
+  postgres:
+    password: ~
