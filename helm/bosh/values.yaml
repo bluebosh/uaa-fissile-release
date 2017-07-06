@@ -1,0 +1,118 @@
+# Default values for bosh.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## image
+##
+image: bluebosh/bosh-bosh
+
+## image version.
+## ref: https://hub.docker.com/r/bluebosh
+##
+imageTag: "latest"
+
+blob:
+  agent:
+    password: blob_agent_password
+  director:
+    password: blob_director_password
+
+director:
+  cert: |-
+    -----BEGIN CERTIFICATE-----
+    MIIJDjCCBvagAwIBAgIQJytXL/tJGI7g934oM2alajANBgkqhkiG9w0BAQsFADAV
+    MRMwEQYDVQQDEwppbnRlcm5hbENBMB4XDTE3MDYzMDA4MjgwNFoXDTE5MDYzMDA4
+    MjgwNFowEzERMA8GA1UEAxMIZGlyZWN0b3IwggEiMA0GCSqGSIb3DQEBAQUAA4IB
+    DwAwggEKAoIBAQDVHhvXHpmGpkhZOVm0q9nL7NQaNygg3DLmoWE0hRKRsE50/dTG
+    8fPVXOgnNKc4Uu41L3DLZNHTXMpbpycau91r6dO4tcNseMNlU3Hatz8FsbRn1pXS
+    6m60LwYHYeqMjgR1h5Ix8GGjV+OTKdvG+cNlUGyAC7499g1MrJyZgTARaTvGRHa8
+    XX5iNFKHAsJCh60XkmCkUkrjxBkaK5SstAzZlmyrKpVzX+8HKsHZV2rIOKJwSzAB
+    qPuMl4xhsA0ddi974y82H1mRPn7xFi4Dt7xOLYiXKZxoSsG8wX/RMJRrzRKGAh8J
+    RvZG0nj4QYQS4LunXLPydgifBzyX6xotVbulAgMBAAGjggVaMIIFVjAOBgNVHQ8B
+    Af8EBAMCA7gwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMB0GA1UdDgQW
+    BBT+2VVveGGLenxlUBOsVGIZcJBMcjAfBgNVHSMEGDAWgBS6e5FM0ylUiZTB0/LJ
+    Pki7Q7uLkjCCBOMGA1UdEQSCBNowggTWgghkaXJlY3RvcoIKKi5kaXJlY3RvcoIX
+    ZGlyZWN0b3ItMC5kaXJlY3Rvci1wb2SCF2RpcmVjdG9yLTEuZGlyZWN0b3ItcG9k
+    ghdkaXJlY3Rvci0yLmRpcmVjdG9yLXBvZIIXZGlyZWN0b3ItMy5kaXJlY3Rvci1w
+    b2SCF2RpcmVjdG9yLTQuZGlyZWN0b3ItcG9kghdkaXJlY3Rvci01LmRpcmVjdG9y
+    LXBvZIIXZGlyZWN0b3ItNi5kaXJlY3Rvci1wb2SCF2RpcmVjdG9yLTcuZGlyZWN0
+    b3ItcG9kghdkaXJlY3Rvci04LmRpcmVjdG9yLXBvZIIXZGlyZWN0b3ItOS5kaXJl
+    Y3Rvci1wb2SCFWRpcmVjdG9yLmRpcmVjdG9yLnN2Y4IXKi5kaXJlY3Rvci5kaXJl
+    Y3Rvci5zdmOCH2RpcmVjdG9yLTAuZGlyZWN0b3ItcG9kLnVhYS5zdmOCH2RpcmVj
+    dG9yLTEuZGlyZWN0b3ItcG9kLnVhYS5zdmOCH2RpcmVjdG9yLTIuZGlyZWN0b3It
+    cG9kLnVhYS5zdmOCH2RpcmVjdG9yLTMuZGlyZWN0b3ItcG9kLnVhYS5zdmOCH2Rp
+    cmVjdG9yLTQuZGlyZWN0b3ItcG9kLnVhYS5zdmOCH2RpcmVjdG9yLTUuZGlyZWN0
+    b3ItcG9kLnVhYS5zdmOCH2RpcmVjdG9yLTYuZGlyZWN0b3ItcG9kLnVhYS5zdmOC
+    H2RpcmVjdG9yLTcuZGlyZWN0b3ItcG9kLnVhYS5zdmOCH2RpcmVjdG9yLTguZGly
+    ZWN0b3ItcG9kLnVhYS5zdmOCH2RpcmVjdG9yLTkuZGlyZWN0b3ItcG9kLnVhYS5z
+    dmOCI2RpcmVjdG9yLmRpcmVjdG9yLnN2Yy5jbHVzdGVyLmxvY2FsgiUqLmRpcmVj
+    dG9yLmRpcmVjdG9yLnN2Yy5jbHVzdGVyLmxvY2Fsgi1kaXJlY3Rvci0wLmRpcmVj
+    dG9yLXBvZC51YWEuc3ZjLmNsdXN0ZXIubG9jYWyCLWRpcmVjdG9yLTEuZGlyZWN0
+    b3ItcG9kLnVhYS5zdmMuY2x1c3Rlci5sb2NhbIItZGlyZWN0b3ItMi5kaXJlY3Rv
+    ci1wb2QudWFhLnN2Yy5jbHVzdGVyLmxvY2Fsgi1kaXJlY3Rvci0zLmRpcmVjdG9y
+    LXBvZC51YWEuc3ZjLmNsdXN0ZXIubG9jYWyCLWRpcmVjdG9yLTQuZGlyZWN0b3It
+    cG9kLnVhYS5zdmMuY2x1c3Rlci5sb2NhbIItZGlyZWN0b3ItNS5kaXJlY3Rvci1w
+    b2QudWFhLnN2Yy5jbHVzdGVyLmxvY2Fsgi1kaXJlY3Rvci02LmRpcmVjdG9yLXBv
+    ZC51YWEuc3ZjLmNsdXN0ZXIubG9jYWyCLWRpcmVjdG9yLTcuZGlyZWN0b3ItcG9k
+    LnVhYS5zdmMuY2x1c3Rlci5sb2NhbIItZGlyZWN0b3ItOC5kaXJlY3Rvci1wb2Qu
+    dWFhLnN2Yy5jbHVzdGVyLmxvY2Fsgi1kaXJlY3Rvci05LmRpcmVjdG9yLXBvZC51
+    YWEuc3ZjLmNsdXN0ZXIubG9jYWyCEmRpcmVjdG9yLmNmLWRldi5pb4IUKi5kaXJl
+    Y3Rvci5jZi1kZXYuaW8wDQYJKoZIhvcNAQELBQADggIBAGv/fB/T+cx0BHP9bIej
+    kqZJ2GN8XuvQJ6TQTuFOspcMr1DuhOX9wXFrQdbgPyg3RUcOcNcFH6xyvSKi5O7H
+    dalwLImhaGw+YUMpJBlZKRuTSQxrZqAJMc45d58jf/H6ppkj2X2FRESPG7WE4egR
+    n1dd9UdZ5byC0p8W/neB1679xqEL0KVj4X3O3o+3cXTYyBHhRsjk4SX/ZyZI5stA
+    /Kj96DaPdgJi2BSZQ8lY3c4YKZA+gDphU3pyZr7J+aq937YIm/3WpX7iXHZmMDSX
+    0kWGh29gTagX3TePNRvWBeGK5NcKwwuZyf0dvSCh6lAtTS9O6N8AkK7E8zQDLdWD
+    FejWISRcP9Yru+calOrb7F6F2n9fgB5Ow6fhGmWuyB8TvjvAhRVM0oQTbTcvYa8I
+    u50/ochG4hZeuKFsSUwNAdZ9yhZGxCEn66E+S2RruS1RIh4WqmCm1f3yQ9Hm0gb+
+    zwMxpxaMXxvMem2lRaO8dlGnVAbjeDPWY5LjLrFcr6Ka7J1n/RjmkzmnLPhwBAOq
+    y5HQACvatlMLT6dfnGdz1MDIyYtLrfnax0vI0Uk37HTXrznYJLHwaTTqCiPyUcqF
+    Obkz3VPeDZ1W//xXVTLcKSfbCz5FyUbpkz3u2dKa9tilmcgMhPFCKCMK1HvwUg5M
+    sKRSR3AldXBkoCJsPxIr/bXc
+    -----END CERTIFICATE-----
+  key: |-
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpQIBAAKCAQEA1R4b1x6ZhqZIWTlZtKvZy+zUGjcoINwy5qFhNIUSkbBOdP3U
+    xvHz1VzoJzSnOFLuNS9wy2TR01zKW6cnGrvda+nTuLXDbHjDZVNx2rc/BbG0Z9aV
+    0uputC8GB2HqjI4EdYeSMfBho1fjkynbxvnDZVBsgAu+PfYNTKycmYEwEWk7xkR2
+    vF1+YjRShwLCQoetF5JgpFJK48QZGiuUrLQM2ZZsqyqVc1/vByrB2VdqyDiicEsw
+    Aaj7jJeMYbANHXYve+MvNh9ZkT5+8RYuA7e8Ti2IlymcaErBvMF/0TCUa80ShgIf
+    CUb2RtJ4+EGEEuC7p1yz8nYInwc8l+saLVW7pQIDAQABAoIBAQDHczQu8W5RO9G9
+    3xR7J9HfLbebCT++8RWaDjJAysGEI3JpvxyhS9MdPaPu/TH6XnKcx9dSIvrUSqT/
+    fcH1HRiuY9lHpqRMIgEMFToarSCIHbVu8L6q88fDTbbgtdyiyk6WB9jkb8mQ6zIK
+    ikQrRZh+evPwKg1TQ7FSrsCoUOVBhHtTmioQbjXpruyiMASwZVUlzmUso3538Xc3
+    ubBRa/vQMz3i6gLg9n0+2JNIr5HeGI0+h1EithHoc0t/RzWSrLfRdtTR8eCTVoLK
+    YmpUWZVncvTcwRbn0yHwNOyDBZ0xS6LM/vtHpVky6vinGwJxqjtEB0lOWz7Cqvz6
+    Cig7vy6BAoGBAN+ORrqDQjHQ7LAtezyMcwt9ssEw5gtCdVWThH4YziJ24qj0zGYc
+    yxSnyXbEojckw+4Pn9IW1qLN/fQ8Rpsqk9xZXUxBSJdPlFLOsZdy2vNeYlRNJo5q
+    6GD4/sMG+DboxhDT/I6xCNXQsiMprewEzmfErLZ3Z8YThi3rIOB1C+q1AoGBAPQM
+    Bpf1QU4NyGWMbDz+Df8oYS8YKaEGhjRfwb4JeYX+s0WJI+sofwodtYvjL3xBwJJS
+    nAZu0cJ90QgnVleJedvv0O529eKmJFMDrTO9/78KUkTxrShqNquUcS94qYsA0OEn
+    PdW0EtCynQCGshLMGLwfYayq8cGQf0OYZmkTtPMxAoGBANup5X2nNAfXDnsedZVN
+    PE3yOQ7ziVdO+hQYW3u7y/C5eIYj5CQB7tpg8+ir1ejxS0REPfolTsmyNvMhtw8I
+    izlc5fvjufxTyZ6EUqRJyzKPb3b+SABws911TH89/e+WUeh/JA7hjZjq897xOWBM
+    aLQ14K96LJHI5XOBMlDbMdZxAoGBAM1RxMZZx2yEugF9Z57U2y+9aC339SYNWCF+
+    IoDgdcYe5/Jrk7WHZ4I6Rn//TfcLVpmEONJMr9sigReMCN8ywTwhgjTuDqZ1wv+4
+    iyKKCj1O0LJCZb0nxwEJrUQUDwfsUs/qdOJzUpUUgHRt3ilkXrb+6+0aELUZ/YgA
+    EsD6nHUxAoGAbmaoYdx9VY9KChNdMiSBo8Tizr7atYZjGuGTSj7/omWqKxUXfm9n
+    XALDzcTJxB3Nyu1DUDAlixZ5bCPMF5AdhkBIDcxsio/YQancU7adxmD7X68vAIV+
+    Ye2wT8dYGwUBaHJHJETsu3s43kO/64NBrOp7UgNQ+KVVqBZqWwbhuCM=
+    -----END RSA PRIVATE KEY-----
+
+monit:
+  password: monit_password
+
+nats:
+  password: nats_password
+  http:
+    password: nats_http_password
+
+postgres:
+  password: postgres_password
+
+webserver:
+  password: webserver_password
+
+cpi:
+  properties: |
+    {"clusters":{"wjq_kube1":{"certificate_authority_data":"-----BEGIN CERTIFICATE-----\nMIIFRTCCAy2gAwIBAgIJAJrLY7F+ouC7MA0GCSqGSIb3DQEBCwUAMDkxNzA1BgNV\nBAMMLjVlOTEyNzgzMjJkMTQ2MTg5NDY5MDBlNzEzMmNlZWQ1LWt1YmVybmV0ZXMt\nY2EwHhcNMTcwNjE5MDc1MjM2WhcNNDQxMTA0MDc1MjM2WjA5MTcwNQYDVQQDDC41\nZTkxMjc4MzIyZDE0NjE4OTQ2OTAwZTcxMzJjZWVkNS1rdWJlcm5ldGVzLWNhMIIC\nIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA0bswTzJSL90/qMAHpo4pjL+7\nU8ZFmo7Ui1fo9nuv8DCwon0RUd9WohCblGoHJxZk5RO52+hjpImtXgu7BUVucE5o\ngrWdkH8KYLwkH4ApaAWD8+78dcFCM4UYwsdwm+CRTsxf3TWcXSA7yERS3QJda5nt\nqsybALgw7UZLK8L7GHIdRkvIRc5OZNEJOQS6QG0yrouqtLqGtYHUO1UFTBfm/tb6\nv7OLQXGOlbgxxe0DmWNqI/Dj3Lcw8anX4LdaIrGfTQGxA2kd9HzaVApk/5043PCn\nm5ds4Hanl+PiTPcL3fbnt+meroOC4nOr+/daT2DJd+JPC/N0PJZe0IBeDPLwdbeO\nIzuLmARMji4a4olFg+t/eQNiRBow2KXGExfxgalnnJS/9e/QKRcLenSdh+JblukI\nEVpdIJ+sVe+S8Pr50Itc3vO4YOJy6GGm94yUdgmL+ibmg7kWv3idgdoV8zcKES4h\ndPOEUJMI51ubbv8DjtaZ/k+LFq28FkFDKXcfWjZdbnjpx5VY/jH6jhRlVFrgA5eg\n85V+UdDxjIbJjF/dTgEUv2pLAanSjB/wPiEBWENCPKEDcsg/ocpsoTLliN5L+wLc\n+Qbghwdo8fEcu5DRQlBe0wMoIH415TEhDd/gYZohUIX3/zbZaoVB+V5gLYx5L0YI\nfLYwNaC0AzXVhdoK990CAwEAAaNQME4wHQYDVR0OBBYEFC+qXgxmv4vRQ66wFBR+\nQB53B+rPMB8GA1UdIwQYMBaAFC+qXgxmv4vRQ66wFBR+QB53B+rPMAwGA1UdEwQF\nMAMBAf8wDQYJKoZIhvcNAQELBQADggIBAKBRk50ifRiSDFm8lqE4mO6jUoYett6L\nLlV7aeedTTt7NyDvzjznuM1cUNgVNNRgl+RE8z5VAR5eLtTI8OY/rfNry/keRsyI\npWOC8fp7edEFRssQxmuzD/3HlxqC+0jFL6fcqA8jCCizHuC1bboUC/OQqNZ7I139\nxob+Lo+jhu6LQgyCC6ghTAj8ieMm7rAIcNvrCIY72NW3SAcWsSQPDgW3/UjPS230\npIuBOTTXSjaUtVF8JubU71dhXyUmmo5Qa88Pu9qxaidElj5hzNksdZBYpl0fuA5O\nVT6VTjXqrkqHJH4F3hMasDpOWL6UNqAf/K4P5Xghnb4KtLdjWeHLVeABIFFGCilM\nvEVUMNtviIWiCCVlxlRXFEPaAvej0e8u1mWTDS+mY8n+zNq6tpZ7ls4Nio+dqgvg\ndWZ3V1a6nwBBZ8ATNhsulxUcbdXt27szsmesGrtG/bkTdRr41uitkd4IXulTl0m9\noHm131yMjJaffuLd9+kZej70sBGnXj1uSEVgTHAFIN+lva3sCJbxehGBXQgxjr4p\npXDw7ggmYMnmjAqCfx+8rd9T/3SWRxcgNm0ifGf/ELixIzP2qImnLIjqdJyPTPNU\nekzYmhQ/szAfNFEbVrV+gv2j1A9dFzGdiJZVASWyD/xmr9oOKE++bVx/2S0MN2dx\nw+Urlwd2Een9\n-----END CERTIFICATE-----\n","server":"https://169.46.7.238:22698"}},"contexts":{"wjq_kube1":{"cluster":"wjq_kube1","namespace":"bosh3","user":"admin"}},"current_context":"wjq_kube1","users":{"admin":{"auth_provider":"oidc","client_id":"bx","client_secret":"bx","idp_issuer_url":"https://iam.ng.bluemix.net/kubernetes","refresh_token":"CBosZKmt3k9eaQKizBaycjXYQ7xJe_jOCQ4s3lxewr7V5QbHPX6l9Tf-kaIqkCKiZt_gVre8kOpjWzG13hfD9CBQ4bksga9G7HszGEgitX9w8KonnT3VWeBY2Qqb3j5y76XG8zGdfMr2kWlQ_bzVovEiLrm5e0MnLIgYZdb_gQ_oO7EW7wIyPp8D12-0rLenJxmaANY1L7cLU1HHy1zB4H3ADAnpe-YYUeBukiHN161Hnzhmz26iV_dRN_tjmfSVE90Co6MoKjZCm3pzTG7ejOA_QC_UAa1YbVEbBr444-BmwwF1FnIt0WSszSZkSVdMhLGPoDlPHbldI2WvPq75OhmtNDUA2nmzUAg-HiAaczvZIdzc3wFzkKEIW9rUWUm3cYqxui_fre3am_PZkIrFETJrE-KjgbXL0C46x15DZVficrV1c4BRsdpE1z0HAKvM1thqT0cN1J1u2eJS4q4kVLwNAE12C0xsgT-GnaodIY7MgefmBP4HR3c3YK5L4Z4_L28U-fu3VqGggTAQTMQJ9tJmvnDHsiMNMq_HfgF1c_jz5CGou5PY9Tvz38iHMjEf","token":"eyJraWQiOiIyMDE3MDQwMi0wMDowMDowMCIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJodHRwczovL2lhbS5uZy5ibHVlbWl4Lm5ldC9rdWJlcm5ldGVzIiwic3ViIjoid2FuZ2pxQGNuLmlibS5jb20iLCJhdWQiOiJieCIsImV4cCI6MTQ5ODIwMDk2OSwiaWF0IjoxNDk4MTk3MzY5fQ.xV3fB2_dM_SByWtzpGUeeti9xS3Rur9CbQF2X8pJ0O9dnlYLhuiGdLibQBEU3OJ2aQChK4BYx2iV-K7jRNBN52qbal3htYQLQgl-UjNxv1LJfEUZcs-u6vgJLVIoh7GoZMwC4ezgAT8iqNvINgSNfNVojdv0-zPVvSle6OlnA-jYJrnS0-zAQmt2pU37ajRuih3vwqk29u2L5MsltWpc45D9hkgw-_Mrp1nvl8bHMn1XkUuwfSOA_hR50NPfrgEsTwUCyy5Q81jFcQd66TFfWtYTfsFwsOGnhsJR7ZF4TsIPDhSfIDL9xNeFsSbT8-HDEroji9wzVWQpmADDybVCuA"}}}
