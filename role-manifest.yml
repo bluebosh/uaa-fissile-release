@@ -1,223 +1,153 @@
 ---
 roles:
-- name: mysql
-  environment_scripts:
-  - scripts/configure-HA-hosts.sh
-  scripts:
-  - scripts/create_mysql_data_tmp.sh
-  - scripts/chown_vcap_store.sh
-  - scripts/patches/fix_mysql_advertise_ip.sh
-  - scripts/patches/fix_mysql_setup_syslog_forwarder.sh
-  - scripts/patches/enable_mysql_galera_bootstrap.sh
+- name: bosh
   jobs:
-  - name: global-properties # needs to be first so images use it for processing monit templates
-    release_name: hcf
-  - name: patch-properties
-    release_name: hcf
-  - name: mysql
-    release_name: cf-mysql
+  - name: nats
+    release_name: bosh
+  - name: director
+    release_name: bosh
+  - name: blobstore
+    release_name: bosh
+  - name: powerdns
+    release_name: bosh
+  - name: postgres-9.4
+    release_name: bosh
+  - name: kubernetes_cpi
+    release_name: kubernetes-cpi
   processes:
-  - name: mariadb_ctrl
-  - name: galera-healthcheck
-  - name: gra-log-purger-executable
+  - director
+  - blobstore
+  - nats
+  - postgres
+  - powerdns
   run:
     scaling:
       min: 1
-      max: 1
+      max: 3
     capabilities: []
     persistent-volumes:
-      - path: /var/vcap/store
-        tag: mysql-data
-        size: 2
+    - path: /var/vcap/store
+      tag: disk-eb97d5f7-85d5-4537-651f-ec74b8cf383d
+      size: 20 # parsecs
     shared-volumes: []
-    memory: 3072
-    virtual-cpus: 2
+    memory: 4096
+    virtual-cpus: 4
     exposed-ports:
-      - name: 'mysql'
-        protocol: 'TCP'
-        external: 3306
-        internal: 3306
-        public: false
-      - name: 'galera-tcp'
-        protocol: 'TCP'
-        external: 4567
-        internal: 4567
-        public: false
-      - name: 'galera-udp'
-        protocol: 'UDP'
-        external: 4567
-        internal: 4567
-        public: false
-      - name: 'galera-ist'
-        protocol: 'TCP'
-        external: 4568
-        internal: 4568
-        public: false
-      - name: 'healthcheck'
-        protocol: 'TCP'
-        external: 9200
-        internal: 9200
-        public: false
-      - name: 'xtrabackup'
-        protocol: 'TCP'
-        external: 4444
-        internal: 4444
-        public: false
-    healthcheck:
-      slow_startup: true
-      readiness:
-        url: http://container-ip:9200/
-  configuration:
-    templates:
-      properties.cf_mysql.external_host: "((DOMAIN))"
-      properties.cf_mysql.mysql.advertise_host: mysql-((HCP_COMPONENT_INDEX)).mysql-pod
-      properties.cf_mysql.mysql.admin_password: "((MYSQL_ADMIN_PASSWORD))"
-      properties.cf_mysql.mysql.cluster_health.password: '((MYSQL_CLUSTER_HEALTH_PASSWORD))'
-      properties.cf_mysql.mysql.cluster_ips: '((MYSQL_HCF_CLUSTER_IPS))((#MYSQL_HCF_CLUSTER_CONFIG_REVISION))((/MYSQL_HCF_CLUSTER_CONFIG_REVISION))'
-      properties.cf_mysql.mysql.galera_healthcheck.db_password: "((MYSQL_ADMIN_PASSWORD))"
-      properties.cf_mysql.mysql.galera_healthcheck.endpoint_password: "((MYSQL_GALERA_HEALTHCHECK_ENDPOINT_PASSWORD))"
-      properties.cf_mysql.mysql.seeded_databases: '[{"name":"uaadb", "username": "uaaadmin", "password":"((UAADB_PASSWORD))"}]'
-- name: uaa
-  environment_scripts:
-  - scripts/configure-HA-hosts.sh
-  scripts:
-  - scripts/authorize_internal_ca.sh
-  jobs:
-  - name: global-properties # needs to be first so images use it for processing monit templates
-    release_name: hcf
-  - name: uaa
-    release_name: uaa
-  processes:
-  - uaa
-  run:
-    scaling:
-      min: 1
-      max: 65535
-    capabilities: []
-    persistent-volumes: []
-    shared-volumes: []
-    memory: 2048
-    virtual-cpus: 2
-    exposed-ports:
-      - name: uaa
+      - name: director
         protocol: TCP
-        external: 8080
-        internal: 8080
-        public: false
-      - name: uaa-ssl
+        external: 25555
+        internal: 25555
+        public: true
+      - name: director_backend
         protocol: TCP
-        external: 2793
-        internal: 8443
-        public: false
-    healthcheck:
-      liveness:
-        initial_delay: 1800
-        period: 60
-      readiness:
-        url: https://container-ip:8443/info
-        headers:
-          host: uaa
-          accept: application/json
-  configuration:
-    templates:
-      properties.uaadb.roles: '[{"name": "uaaadmin", "password": "((UAADB_PASSWORD))", "tag": "admin"}]'
+        external: 25556
+        internal: 25556
+        public: true
+      - name: blobstore
+        protocol: TCP
+        external: 25250
+        internal: 25250
+        public: true
+      - name: nats
+        protocol: TCP
+        external: 4222
+        internal: 4222
+        public: true
+      - name: powerdns
+        protocol: TCP
+        external: 8081
+        internal: 8081
+        public: true
+      - name: postgres
+        protocol: TCP
+        external: 5432
+        internal: 5432
+        public: true
+      - name: dns-tcp
+        protocol: TCP
+        external: 53
+        internal: 53
+        public: true
+      - name: dns-udp
+        protocol: UDP
+        external: 53
+        internal: 53
+        public: true
 configuration:
   variables:
-  - name: DOMAIN
-    description: >
-      Base domain name of the UAA endpoint; `uaa.${DOMAIN}` must be correctly
-      configured to point to this UAA instance
-  - name: HCP_COMPONENT_INDEX
-    type: environment
-  - name: HCP_SERVICE_DOMAIN_SUFFIX
-  - name: JWT_SIGNING_PEM
-  - name: KUBERNETES_NAMESPACE
-    type: environment
+  - name: BLOB_AGENT_PASSWORD
+    secret: true
+    immutable: true
+    generator:
+      type: Password
+    description: The password for blob agent.
+    required: true
+  - name: BLOB_DIRECTOR_PASSWORD
+    secret: true
+    immutable: true
+    generator:
+      type: Password
+    description: The password for blob director.
+    required: true
+  - name: DIRECTOR_CERT
+    secret: true
+    generator:
+      id: "director_cert"
+      type: Certificate
+      value_type: certificate
+    description: The server's ssl certificate. The default is a self-signed certificate and should always be replaced for production deployments.
+  - name: DIRECTOR_KEY
+    secret: true
+    generator:
+      id: "director_cert"
+      type: Certificate
+      value_type: private_key
+      key_length: 4096
+    description: The server's ssl private key. Only passphrase-less keys are supported.
   - name: MONIT_PASSWORD
     secret: true
     immutable: true
     generator:
       type: Password
     description: Password used for the monit API.
-  - name: MYSQL_ADMIN_PASSWORD
+  - name: NATS_HTTP_PASSWORD
     secret: true
     immutable: true
     generator:
       type: Password
-    description: The password for the MySQL server admin user.
+    description: The password for the nats http user.
     required: true
-  - name: MYSQL_CLUSTER_HEALTH_PASSWORD
+  - name: NATS_PASSWORD
     secret: true
     immutable: true
     generator:
       type: Password
-    description: The password for the cluster logger health user.
+    description: The password for the nats user.
     required: true
-  - name: MYSQL_GALERA_HEALTHCHECK_ENDPOINT_PASSWORD
+  - name: POSTGRES_PASSWORD
     secret: true
     immutable: true
     generator:
       type: Password
-    description: The password used to contact the sidecar endpoints via Basic Auth.
+    description: The password for the postgres user.
     required: true
-  - name: MYSQL_HCF_CLUSTER_CONFIG_REVISION
-    default: 0
-    description: An indicator to increment when changing the number of MySQL hosts in the cluster, to properly trigger component restarts.
+  - name: WEBSERVER_PASSWORD
+    secret: true
+    immutable: true
+    generator:
+      type: Password
+    description: The password for the webserver.
     required: true
-  - name: MYSQL_HCF_CLUSTER_IPS
-    type: environment
-  - name: SAML_SERVICEPROVIDER_CERT
-    secret: true
-    generator:
-      id: "saml_serviceprovider_cert"
-      type: Certificate
-      value_type: certificate
-    description: PEM-encoded certificate
-  - name: SAML_SERVICEPROVIDER_KEY
-    secret: true
-    generator:
-      id: "saml_serviceprovider_cert"
-      type: Certificate
-      value_type: private_key
-      key_length: 4096
-    description: PEM-encoded key.
-  - name: UAADB_PASSWORD
-    secret: true
-    immutable: true
-    generator:
-      type: Password
-    description: The password for access to the UAA database.
-  - name: UAA_ADMIN_CLIENT_SECRET
-    secret: true
-    immutable: true
-    generator:
-      type: Password
-    description: The password of the admin client - a client named admin with uaa.admin as an authority.
-  - name: UAA_SERVER_CERT
-    secret: true
-    generator:
-      id: "uaa_cert"
-      type: Certificate
-      value_type: certificate
-    description: The server's ssl certificate. The default is a self-signed certificate and should always be replaced for production deployments.
-  - name: UAA_SERVER_KEY
-    secret: true
-    generator:
-      id: "uaa_cert"
-      type: Certificate
-      value_type: private_key
-      key_length: 4096
-    description: The server's ssl private key. Only passphrase-less keys are supported.
   templates:
     properties.fissile.monit.password: '"((MONIT_PASSWORD))"'
-    properties.login.saml.serviceProviderCertificate: '"((SAML_SERVICEPROVIDER_CERT))"'
-    properties.login.saml.serviceProviderKey: '"((SAML_SERVICEPROVIDER_KEY))"'
-    properties.login.url: "https://login.((DOMAIN)):2793"
-    properties.uaa.admin.client_secret: '"((UAA_ADMIN_CLIENT_SECRET))"'
-    properties.uaa.clients.default_zone_admin.secret: '"((UAA_ADMIN_CLIENT_SECRET))"'
-    properties.uaa.clients: '{"default_zone_admin": {"secret": "((UAA_ADMIN_CLIENT_SECRET))", "authorized-grant-types": "client_credentials", "scope": "uaa.admin", "authorities": "uaa.admin"}}'
-    properties.uaa.jwt.policy.keys.default.signingKey: ((JWT_SIGNING_PEM))
-    properties.uaa.sslCertificate: ((UAA_SERVER_CERT))
-    properties.uaa.sslPrivateKey: ((UAA_SERVER_KEY))
-    properties.uaa.url: "https://uaa.((DOMAIN)):2793"
-    properties.uaa.zones.internal.hostnames: '["uaa","uaa.((KUBERNETES_NAMESPACE))","uaa.((KUBERNETES_NAMESPACE)).svc","uaa.((HCP_SERVICE_DOMAIN_SUFFIX))"]'
+    properties.nats.password: '"((NATS_PASSWORD))"'
+    properties.dns.db.password: '"((POSTGRES_PASSWORD))"'
+    properties.dns.webserver.password: '((WEBSERVER_PASSWORD))'
+    properties.director.db.password: '"((POSTGRES_PASSWORD))"'
+    properties.director.ssl.cert: ((DIRECTOR_CERT))
+    properties.director.ssl.key: ((DIRECTOR_KEY))
+    properties.blobstore.agent.password: '"((BLOB_AGENT_PASSWORD))"'
+    properties.blobstore.director.password: '"((BLOB_DIRECTOR_PASSWORD))"'
+    properties.agent.mbus: '"nats://nats_user:((NATS_PASSWORD))@bosh.bosh3.svc.cluster.local:4222"'
+    properties.nats.http.password: '"((NATS_HTTP_PASSWORD))"'
+    properties.postgres.password: '"((POSTGRES_PASSWORD))"'

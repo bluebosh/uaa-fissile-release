@@ -1,28 +1,25 @@
 ---
 properties:
-  cf_mysql:
-    mysql:
-      admin_password: ~
-      cluster_health:
-        password: ~
-      galera_healthcheck:
-        db_password: ~
-        endpoint_password: ~
   fissile:
     monit:
       password: ~
-  login:
-    saml:
-      serviceProviderKey: ~
-  uaa:
-    admin:
-      client_secret: ~
-    clients:
-      default_zone_admin:
-        secret: ~
-    jwt:
-      policy:
-        keys:
-          default:
-            signingKey: ~
-    sslPrivateKey: ~
+  nats:
+    http:
+      password: ~
+    password: ~
+  dns:
+    db:
+      password: ~
+    webserver:
+      password: ~
+  director:
+    db:
+      password: ~
+  blobstore:
+    agent:
+      password: ~
+  blobstore:
+    director:
+      password: ~
+  postgres:
+    password: ~
