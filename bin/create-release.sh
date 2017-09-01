@@ -2,8 +2,6 @@
 set -o errexit
 set -o nounset
 
-set -x
-
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
 
 if [[ $# -lt 2 || -z "${1:-}" || -z "${2:-}" ]]; then
@@ -102,7 +100,7 @@ done
 #
 # This is undesirable when working with newer releases, then switching back
 # to older ones
-rm -rf ${ROOT}/${release_path}/dev-releases
+rm -rf ${ROOT}/${release_path}/dev_releases
 
 docker run \
     --interactive \

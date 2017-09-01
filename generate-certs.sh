@@ -108,8 +108,8 @@ make_domains() {
     done
     local cluster_name
     for cluster_name in "" .cluster.local ; do
-        result="${result},${host_name}.uaa.svc${cluster_name}"
-        result="${result},*.${host_name}.uaa.svc${cluster_name}"
+        result="${result},${host_name}.director.svc${cluster_name}"
+        result="${result},*.${host_name}.director.svc${cluster_name}"
         for (( i = 0; i < 10; i++ )) ; do
             result="${result},${host_name}-${i}.${host_name}-pod.uaa.svc${cluster_name}"
         done
@@ -131,27 +131,19 @@ make_ha_domains() {
     make_domains "$1"
 }
 
-# generate JWT certs
-openssl genrsa -out "${certs_path}/jwt_signing.pem" -passout pass:"${signing_key_passphrase}" 4096
-openssl rsa -in "${certs_path}/jwt_signing.pem" -outform PEM -passin pass:"${signing_key_passphrase}" -pubout -out "${certs_path}/jwt_signing.pub"
-
 # Instructions from https://github.com/cloudfoundry-incubator/diego-release#generating-tls-certificates
 
 # Generate internal CA
 certstrap --depot-path "${internal_certs_dir}" init --common-name "internalCA" --passphrase "${signing_key_passphrase}" --years 10
 
-# generate SAML_SERVICEPROVIDER certs
-certstrap --depot-path "${internal_certs_dir}" request-cert --common-name saml_serviceprovider --passphrase ""
-certstrap --depot-path "${internal_certs_dir}" sign saml_serviceprovider --CA internalCA --passphrase "${signing_key_passphrase}"
+# generate director certs
+director_server_key="${certs_path}/director_private_key.pem"
+director_server_crt="${certs_path}/director_ca.crt"
 
-# generate uaa certs
-uaa_server_key="${certs_path}/uaa_private_key.pem"
-uaa_server_crt="${certs_path}/uaa_ca.crt"
-
-certstrap --depot-path "${internal_certs_dir}" request-cert --common-name "uaa" --domain "$(make_domains "uaa")" --passphrase ""
-certstrap --depot-path "${internal_certs_dir}" sign "uaa" --CA internalCA --passphrase "${signing_key_passphrase}"
-cp "${internal_certs_dir}/uaa.crt" "${uaa_server_crt}"
-cat "${internal_certs_dir}/uaa.crt" "${internal_certs_dir}/uaa.key" > "${uaa_server_key}"
+certstrap --depot-path "${internal_certs_dir}" request-cert --common-name "director" --domain "$(make_domains "director")" --passphrase ""
+certstrap --depot-path "${internal_certs_dir}" sign "director" --CA internalCA --passphrase "${signing_key_passphrase}"
+cp "${internal_certs_dir}/director.crt" "${director_server_crt}"
+cat "${internal_certs_dir}/director.crt" "${internal_certs_dir}/director.key" > "${director_server_key}"
 
 # escape_file_contents reads the given file and replaces newlines with the literal string '\n'
 escape_file_contents() {
@@ -159,23 +151,15 @@ escape_file_contents() {
     sed 's@$@\\@' < "$1" | tr '\n' 'n'
 }
 INTERNAL_CA_CERT=$(escape_file_contents "${internal_certs_dir}/internalCA.crt")
-JWT_SIGNING_PEM=$(escape_file_contents "${certs_path}/jwt_signing.pem")
-JWT_SIGNING_PUB=$(escape_file_contents "${certs_path}/jwt_signing.pub")
-SAML_SERVICEPROVIDER_CERT=$(escape_file_contents "${internal_certs_dir}/saml_serviceprovider.crt")
-SAML_SERVICEPROVIDER_KEY=$(escape_file_contents "${internal_certs_dir}/saml_serviceprovider.key")
-UAA_SERVER_CERT=$(escape_file_contents "${uaa_server_crt}")
-UAA_SERVER_KEY=$(escape_file_contents "${uaa_server_key}")
+DIRECTOR_CERT=$(escape_file_contents "${director_server_crt}")
+DIRECTOR_KEY=$(escape_file_contents "${director_server_key}")
 
 popd &>/dev/null
 
 cat <<ENVS > "${output_path}"
 INTERNAL_CA_CERT=${INTERNAL_CA_CERT}
-JWT_SIGNING_PEM=${JWT_SIGNING_PEM}
-JWT_SIGNING_PUB=${JWT_SIGNING_PUB}
-SAML_SERVICEPROVIDER_CERT=${SAML_SERVICEPROVIDER_CERT}
-SAML_SERVICEPROVIDER_KEY=${SAML_SERVICEPROVIDER_KEY}
-UAA_SERVER_CERT=${UAA_SERVER_CERT}
-UAA_SERVER_KEY=${UAA_SERVER_KEY}
+DIRECTOR_CERT=${DIRECTOR_CERT}
+DIRECTOR_KEY=${DIRECTOR_KEY}
 ENVS
 
-echo "UAA keys for ${DOMAIN} wrote to ${output_path}"
+echo "DIRECTOR keys for ${DOMAIN} wrote to ${output_path}"
