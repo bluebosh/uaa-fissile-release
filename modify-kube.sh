@@ -1,6 +1,6 @@
-NEW_IP=$1
-if [[ $NEW_IP = "" ]]; then
-    echo "[ERROR] You must specify your ip as the first argument."
+cluster_name=$1
+if [[ $cluster_name = "" ]]; then
+    echo "[ERROR] You must specify your cluster name as the first argument."
     exit 1
 fi
 
@@ -13,6 +13,7 @@ echo "Done!"
 
 echo
 echo "[INFO] Modify IP"
-sed -i "s/192.168.77.77/$NEW_IP/g" `grep 192.168.77.77 -rl kube/bosh`
-grep -rn $NEW_IP kube/bosh
+node_ip=$(bx cs workers $cluster_ip | awk '/kube.*-w1/{ print $2 }')
+sed -i "s/192.168.77.77/$node_ip/g" `grep 192.168.77.77 -rl kube/`
+grep -rn $node_ip kube/
 echo "Done!"

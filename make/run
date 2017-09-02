@@ -32,11 +32,30 @@ stampy "${GIT_ROOT}/uaa_metrics.csv" "$0" make-run::create start
 #    kubectl create -f -
 #}
 
-#source env/defaults.env
+source env/defaults.env
+
+CLUSTER_NAME=$1
+if [[ $CLUSTER_NAME = "" ]]; then
+    echo "[ERROR] You must specify your cluster name as the first argument."
+    exit 1
+fi
+kube_config=`kubectl config view | grep "user: http"`
+USER=`echo ${kube_config#*#}`
+CLUSTER_SERVER=$(kubectl config view -o json | jq -r '.clusters[] | select(.name=="'$CLUSTER_NAME'") | .cluster.server')
+cluster_ca_file=$(kubectl config view -o json | jq -r '.clusters[] | select(.name=="'$CLUSTER_NAME'") | .cluster."certificate-authority"')
+cluster_path=$HOME/.bluemix/plugins/container-service/clusters/${CLUSTER_NAME}
+#CLUSTER_CERTIFICATE_AUTHORITY_DATA=$(sed ':a;N;$ s/\n/\\n/g;ba' $cluster_path/$cluster_ca_file)
+CLUSTER_CERTIFICATE_AUTHORITY_DATA=$(cat $cluster_path/$cluster_ca_file)
+CLUSTER_TOKEN=$(kubectl config view -o json | jq -r '.users[] | select(.name=="https://iam.ng.bluemix.net/kubernetes#'$USER'") | .user."auth-provider"."config"."id-token"')
+CLUSTER_REFRESH_TOKEN=$(kubectl config view -o json | jq -r '.users[] | select(.name=="https://iam.ng.bluemix.net/kubernetes#'$USER'") | .user."auth-provider"."config"."refresh-token"')
+
 helm install helm \
-     --namespace "${NAMESPACE}"
-#     --set "env.DOMAIN=${DOMAIN}" \
-#     --set "env.UAA_ADMIN_CLIENT_SECRET=${UAA_ADMIN_CLIENT_SECRET}"
+     --namespace "${NAMESPACE}" \
+     --set "env.CLUSTER_NAME=${CLUSTER_NAME}" \
+     --set "env.CLUSTER_CERTIFICATE_AUTHORITY_DATA=${CLUSTER_CERTIFICATE_AUTHORITY_DATA}" \
+     --set "env.CLUSTER_SERVER=${CLUSTER_SERVER}" \
+     --set "env.CLUSTER_REFRESH_TOKEN=${CLUSTER_REFRESH_TOKEN}" \
+     --set "env.CLUSTER_TOKEN=${CLUSTER_TOKEN}"
 
 stampy "${GIT_ROOT}/uaa_metrics.csv" "$0" make-run::create end
 

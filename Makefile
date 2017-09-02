@@ -30,7 +30,7 @@ publish:
 
 
 run: 
-	${GIT_ROOT}/make/run
+	${GIT_ROOT}/make/run $(cluster_name)
 
 stop:
 	${GIT_ROOT}/make/stop

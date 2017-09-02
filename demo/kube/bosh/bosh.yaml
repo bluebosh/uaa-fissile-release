@@ -29,15 +29,15 @@ spec:
               key: blob-director-password
               name: secret-1
         - name: CLUSTER_CERTIFICATE_AUTHORITY_DATA
-          value: {{ required "CLUSTER_CERTIFICATE_AUTHORITY_DATA configuration missing" .Values.env.CLUSTER_CERTIFICATE_AUTHORITY_DATA | quote }}
+          value: -----BEGIN CERTIFICATE-----\nMIIFRTCCAy2gAwIBAgIJANhYKnfhDbJIMA0GCSqGSIb3DQEBCwUAMDkxNzA1BgNV\nBAMMLjNjZjNjZTUwYzM0NzRiM2VhYmMzNmQ0ZWUxYzU3MjcxLWt1YmVybmV0ZXMt\nY2EwHhcNMTcwODI1MDIxNTUxWhcNNDUwMTEwMDIxNTUxWjA5MTcwNQYDVQQDDC4z\nY2YzY2U1MGMzNDc0YjNlYWJjMzZkNGVlMWM1NzI3MS1rdWJlcm5ldGVzLWNhMIIC\nIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwxMWjyssdofSKcD0Emh0yte/\nqVrUG2C8xfXzQ3uPT/jnsxO/MM4b6cLVSWHger6HJ+U8yLUvhRYjQTCE5ZGRy8s/\nZc9gC6ORk9BW+Gob32O8zM2zBOkVhGO9WSXXTA7WvX95BlK7BIhlqzswDlI+DgSV\nK/AoLXGtWuqdmUw26olf2hapB0vEo3ghT5N7GdNXKuvR89O1nfxFozx8090K8qdf\nagQjldd0fivcnfRUN9u68ds/pNsOco7msTXOJ7lZniXUnndA5dzxScScmpCi9k8D\nJE/KLtBG0IHNnJ9MbJdmuJyIMEvscdbWyQtvd31FBItH2A2BAcWA9rtiF7treKPJ\nYZFcZO0OUfvApGRfgzB2m6lVITLNVNBiCzjwKyHyAIVHSD2DZAawVDHBJJzolQg3\nm/vhw7lfL5gimELR5XnBB+ENLBcw9dBPQ5dQXpsF9q9Pdre91CwnQMsbcKZ0H0Ty\nCimXuz94UieR1ve8sAhuYU1Tbm75UmTY5yX+QH4pgx2iY4xO+nWK2AxXK0pQQW2k\nDHcuBa07O8q+f72FiOjcWcwPe2IPWQAipEEeUDHrrnlvHnycZ4x1e2Wp2B+oz0mO\nP6hy93TXaCe2jKd0V6SOZsCMQRgXl+GD4U2dGCpNNDWQTSogd2CeGCQqQ8MzdSgA\nFfaMdVsnQm42lS8NhjcCAwEAAaNQME4wHQYDVR0OBBYEFA0vPUyBxuU2EnuLcUSm\nEHdZNdTSMB8GA1UdIwQYMBaAFA0vPUyBxuU2EnuLcUSmEHdZNdTSMAwGA1UdEwQF\nMAMBAf8wDQYJKoZIhvcNAQELBQADggIBACjeSXPqwpE/D9at3048gcd7+o9WpEpI\nkBvtKgtuRSp5CiL+J5munGS5A3x9aVu1BopSEIpXpnxySyOlOa0qBhloSUScDuiJ\nVT4BE1MQLeV61CWpfO7Y+74AeZs8+0NyapZ8l2Xy1vmTQBz412E6RrOdmwqN8p1g\ncAlRnoMp65vxhWE0ZFXdl8ApQmrzsuls9+PqVHEcxYJdc404W/WVCPN7DnLB7cMm\nKyepiM9HKut0Ybfvq4CcOBWM+N4sV7ChldwgFGuMI7mjLCOr0Yx+zq7CRd88Dcjf\neAof30f0tlRAOG2EqeO7WpSF8ZoV2qotQ9C5S/FGdarelYjpkZc5GWc10yNeoiiz\nZcE6FYkUjOXgbl2BU1Y0FTKrxOsziY3yNdORnmRGtMccI0MJFg8fgFW8P22quW/1\nSlB1mH9/k118yZGU7kkX2qOvu3qj7/gJAtnA+mYneTliJquUoQ3MhHaHBIAW0V+Y\n2NfbqT2Prhy25CAQ/kYJY9s31Vcf9Usa5Q559hR5PE6aU0SuwD5UvNFwfM3T5tza\n8p8XKpdhyme0fbLlBpJEC5fqxMXl1rez7jS1bqQ1hHg1XWGMX1UPysi426FsNfMk\nKsiIj7JFLKGThec31vGj0xX68vcfWyPVrHu8Mn1zo7lInVqDXl8H39+g/VkygExJ\neN4P73xOyTfh\n-----END CERTIFICATE-----
         - name: CLUSTER_NAME
-          value: {{ required "CLUSTER_NAME configuration missing" .Values.env.CLUSTER_NAME | quote }}
+          value: mycluster
         - name: CLUSTER_REFRESH_TOKEN
-          value: {{ required "CLUSTER_REFRESH_TOKEN configuration missing" .Values.env.CLUSTER_REFRESH_TOKEN | quote }}
+          value: W0fuvJ5nqiBoRm0fbolF0bzgjxVbCQePYdV8q81iMOgrbNiz6zYdeUExtG_xCjKwb430tdWjKxno_7r786VSSzAC_T-oAfZ77PlFnqYf93OY6BIkZxW_8mDorLeI1D9QakvJGIvmouTGDePeO8iAaAFXb41yEmUMy9gkkeUgg7NV_3_58oPo_PeE8tTuM1WJnGqdXPKpCUFUe36OVscTlQxWRn4arW3ayXcehb5X2bpesV9Bcp3pEFd0wBKQ46UKDMLuH5Hz7Fxxkb4h8ODbFDJwfaKqSeuFKjyrSC8C7mnHVxnzr7DplRZNRAfanvYNx8peG1pwEPFSnP1V7bV0UKmFXiQAndvqiLlxsGwKJ6US8NJsVpqQfdOsqgNokUgZAWZFzv04ESqoxeQg8r48BCKj4WRVJBymffy_Rd1pa9HyF944K1sm4JrRpK1WSv6QE1pAu2BQMhOLAR9gnU53wdtz86y3v1e2nBpF-HsS5gvWgcc8d0FES3GeAa01Kq-CEJ6voZrlBKT-KQAVhBfm5EnyYngckjoFS5flBIAoZEVDSHIHuxvzLXFhTpZ3t3UkbsiCqzbbVQE3ug9K8QEzFi0ReJslmQsn2pfWXGHwyw9RVw==
         - name: CLUSTER_SERVER
-          value: {{ required "CLUSTER_SERVER configuration missing" .Values.env.CLUSTER_SERVER | quote }}
+          value: https://169.46.7.238:26566
         - name: CLUSTER_TOKEN
-          value: {{ required "CLUSTER_TOKEN configuration missing" .Values.env.CLUSTER_TOKEN | quote }}
+          value: eyJraWQiOiIyMDE3MDUxNS0wMDowMDowMCIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJodHRwczovL2lhbS5uZy5ibHVlbWl4Lm5ldC9rdWJlcm5ldGVzIiwic3ViIjoiemhhbmd0YmpAY24uaWJtLmNvbSIsImF1ZCI6ImJ4IiwiZXhwIjoxNTA0MzY4NjA4LCJpYXQiOjE1MDQzNjUwMDh9.GWHrT7ugFTTZn4bfxU5mpFGhXs-MdE3N-SlmP3jODVlhKK8Bb39q7iHHEovw1PMUPCmgsCntHlRlwrl8uWKpLTzEQcmeGjghdrvgEEBATqww9OTGhiIQDDJ1qny82mSSrao4QmQkoP5Rh8LeDdeRIRP7zg6K2_nKUtkzlI96Av5HyVxTC5S0kXsd38rnIXgG678COVyNdNilXwtXbd3OjFHyg2l9YRd_NHUX9CbuShMQiYEt6RL64de5P9mH3gWOI4CJAPdmH5zT1cMgyJz1OLBrucdI7athb5hxOPnbIw6lvuhYTKmUasU6nLaANS04Q-frpY3YSbnl_2wzB-ISvQ
         - name: DIRECTOR_CERT
           valueFrom:
             secretKeyRef:
@@ -232,7 +232,7 @@ items:
     name: bosh-public
   spec:
     externalIPs:
-    - {{ .Values.kube.external_ip | quote }}
+    - 169.47.254.190
     ports:
     - name: director
       port: 25555

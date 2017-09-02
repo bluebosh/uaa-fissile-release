@@ -14,8 +14,6 @@ properties:
         - name: admin
           password: admin
   blobstore:
-    address: bosh.cpi.svc.cluster.local
-    host: bosh.cpi.svc.cluster.local
     agent:
       user: agent
     director:

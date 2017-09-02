@@ -16,65 +16,14 @@ roles:
     release_name: bosh
   - name: kubernetes_cpi
     release_name: kubernetes-cpi
-  processes:
-  - director
-  - blobstore
-  - nats
-  - postgres
-  - powerdns
   run:
     scaling:
       min: 1
       max: 3
     capabilities: []
-    persistent-volumes:
-    - path: /var/vcap/store
-      tag: bosh-disk
-      size: 20 # parsecs
     shared-volumes: []
     memory: 4096
     virtual-cpus: 4
-    exposed-ports:
-      - name: director
-        protocol: TCP
-        external: 25555
-        internal: 25555
-        public: true
-      - name: director_backend
-        protocol: TCP
-        external: 25556
-        internal: 25556
-        public: true
-      - name: blobstore
-        protocol: TCP
-        external: 25250
-        internal: 25250
-        public: true
-      - name: nats
-        protocol: TCP
-        external: 4222
-        internal: 4222
-        public: true
-      - name: powerdns
-        protocol: TCP
-        external: 8081
-        internal: 8081
-        public: true
-      - name: postgres
-        protocol: TCP
-        external: 5432
-        internal: 5432
-        public: true
-      - name: dns-tcp
-        protocol: TCP
-        external: 53
-        internal: 53
-        public: true
-      - name: dns-udp
-        protocol: UDP
-        external: 53
-        internal: 53
-        public: true
 configuration:
   variables:
   - name: BLOB_AGENT_PASSWORD
@@ -91,6 +40,16 @@ configuration:
       type: Password
     description: The password for blob director.
     required: true
+  - name: CLUSTER_CERTIFICATE_AUTHORITY_DATA
+    required: true
+  - name: CLUSTER_NAME
+    required: true
+  - name: CLUSTER_REFRESH_TOKEN
+    required: true
+  - name: CLUSTER_SERVER
+    required: true
+  - name: CLUSTER_TOKEN
+    required: true
   - name: DIRECTOR_CERT
     secret: true
     generator:
@@ -105,9 +64,7 @@ configuration:
       type: Certificate
       value_type: private_key
       key_length: 4096
-    description: The server's ssl private key. Only passphrase-less keys are supported.
-  - name: KUBERNETES_CONFIG
-    required: true
+    description: The server's ssl private key. Only passphrase-less keys are supported.i
   - name: KUBERNETES_NAMESPACE
     type: environment
   - name: MONIT_PASSWORD
@@ -157,4 +114,6 @@ configuration:
     properties.agent.mbus: '"nats://nats_user:((NATS_PASSWORD))@bosh.((KUBERNETES_NAMESPACE)).svc.cluster.local:4222"'
     properties.nats.http.password: '"((NATS_HTTP_PASSWORD))"'
     properties.postgres.password: '"((POSTGRES_PASSWORD))"'
-    properties.kubeconfig: '"((KUBERNETES_CONFIG))"'
+    properties.blobstore.address: '"bosh.((KUBERNETES_NAMESPACE)).svc.cluster.local"'
+    properties.blobstore.host: '"bosh.((KUBERNETES_NAMESPACE)).svc.cluster.local"'
+    properties.kubeconfig: '{"clusters": {"((CLUSTER_NAME))": {"certificate_authority_data": "((CLUSTER_CERTIFICATE_AUTHORITY_DATA))", "server": "((CLUSTER_SERVER))"}}, "contexts": {"((CLUSTER_NAME))": {"cluster": "((CLUSTER_NAME))", "namespace": "((KUBERNETES_NAMESPACE))", "user": "admin"}}, "current_context": "((KUBERNETES_NAMESPACE))", "users": {"admin": {"auth_provider": "oidc", "client_id": "bx", "client_secret": "bx", "idp_issuer_url": "https://iam.ng.bluemix.net/kubernetes", "refresh_token": "((CLUSTER_REFRESH_TOKEN))", "token": "((CLUSTER_TOKEN))"}}}'
