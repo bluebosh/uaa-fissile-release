@@ -8,5 +8,6 @@ cd "$GIT_ROOT"
 
 RUBY_VERSION=2.3.1 \
 
+${GIT_ROOT}/bin/create-release.sh  src/hcf-release hcf
 ${GIT_ROOT}/bin/create-release.sh  src/bosh bosh
 ${GIT_ROOT}/bin/create-release.sh  src/kubernetes-cpi-release kubernetes-cpi

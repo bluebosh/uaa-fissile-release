@@ -14,8 +14,8 @@ properties:
         - name: admin
           password: admin
   blobstore:
-    address: bosh.bosh3.svc.cluster.local
-    host: bosh.bosh3.svc.cluster.local
+    address: bosh.cpi.svc.cluster.local
+    host: bosh.cpi.svc.cluster.local
     agent:
       user: agent
     director:
@@ -31,4 +31,3 @@ properties:
     query_local_address: 127.0.0.1
   postgres:
     listen_address: 0.0.0.0
-  kubeconfig: kubeconfig

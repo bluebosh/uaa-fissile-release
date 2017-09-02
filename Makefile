@@ -29,7 +29,7 @@ publish:
 .PHONY: build certs releases images kube kube-dist helm publish
 
 
-run: kube/bosh/uaa.yaml
+run: 
 	${GIT_ROOT}/make/run
 
 stop:

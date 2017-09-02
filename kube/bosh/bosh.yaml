@@ -1,0 +1,264 @@
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  creationTimestamp: null
+  labels:
+    skiff-role-name: bosh
+  name: bosh
+spec:
+  replicas: 1
+  serviceName: bosh-set
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        skiff-role-name: bosh
+      name: bosh
+    spec:
+      containers:
+      - env:
+        - name: BLOB_AGENT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: blob-agent-password
+              name: secret-1
+        - name: BLOB_DIRECTOR_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: blob-director-password
+              name: secret-1
+        - name: DIRECTOR_CERT
+          valueFrom:
+            secretKeyRef:
+              key: director-cert
+              name: secret-1
+        - name: DIRECTOR_KEY
+          valueFrom:
+            secretKeyRef:
+              key: director-key
+              name: secret-1
+        - name: MONIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: monit-password
+              name: secret-1
+        - name: NATS_HTTP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: nats-http-password
+              name: secret-1
+        - name: NATS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: nats-password
+              name: secret-1
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: postgres-password
+              name: secret-1
+        - name: WEBSERVER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: webserver-password
+              name: secret-1
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: bluebosh/bosh-bosh:7cc69c6ae0dfdc42bf3c4d56cab0226dd8aedbf2
+        livenessProbe:
+          initialDelaySeconds: 600
+          tcpSocket:
+            port: 2289
+        name: bosh
+        ports:
+        - containerPort: 25555
+          name: director
+          protocol: TCP
+        - containerPort: 25556
+          name: directorbackend
+          protocol: TCP
+        - containerPort: 25250
+          name: blobstore
+          protocol: TCP
+        - containerPort: 4222
+          name: nats
+          protocol: TCP
+        - containerPort: 8081
+          name: powerdns
+          protocol: TCP
+        - containerPort: 5432
+          name: postgres
+          protocol: TCP
+        - containerPort: 53
+          name: dns-tcp
+          protocol: TCP
+        - containerPort: 53
+          name: dns-udp
+          protocol: UDP
+        readinessProbe:
+          tcpSocket:
+            port: 25555
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/vcap/store
+          name: bosh-disk
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+  volumeClaimTemplates:
+  - metadata:
+      annotations:
+        volume.beta.kubernetes.io/storage-class: persistent
+      creationTimestamp: null
+      name: bosh-disk
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 20G
+    status: {}
+status:
+  replicas: 0
+---
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: bosh-set
+  spec:
+    clusterIP: None
+    ports:
+    - name: director
+      port: 25555
+      protocol: TCP
+      targetPort: 0
+    - name: directorbackend
+      port: 25556
+      protocol: TCP
+      targetPort: 0
+    - name: blobstore
+      port: 25250
+      protocol: TCP
+      targetPort: 0
+    - name: nats
+      port: 4222
+      protocol: TCP
+      targetPort: 0
+    - name: powerdns
+      port: 8081
+      protocol: TCP
+      targetPort: 0
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: 0
+    - name: dns-tcp
+      port: 53
+      protocol: TCP
+      targetPort: 0
+    - name: dns-udp
+      port: 53
+      protocol: UDP
+      targetPort: 0
+    selector:
+      skiff-role-name: bosh
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: bosh
+  spec:
+    ports:
+    - name: director
+      port: 25555
+      protocol: TCP
+      targetPort: director
+    - name: directorbackend
+      port: 25556
+      protocol: TCP
+      targetPort: directorbackend
+    - name: blobstore
+      port: 25250
+      protocol: TCP
+      targetPort: blobstore
+    - name: nats
+      port: 4222
+      protocol: TCP
+      targetPort: nats
+    - name: powerdns
+      port: 8081
+      protocol: TCP
+      targetPort: powerdns
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: postgres
+    - name: dns-tcp
+      port: 53
+      protocol: TCP
+      targetPort: dns-tcp
+    - name: dns-udp
+      port: 53
+      protocol: UDP
+      targetPort: dns-udp
+    selector:
+      skiff-role-name: bosh
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: bosh-public
+  spec:
+    externalIPs:
+    - 192.168.77.77
+    ports:
+    - name: director
+      port: 25555
+      protocol: TCP
+      targetPort: director
+    - name: directorbackend
+      port: 25556
+      protocol: TCP
+      targetPort: directorbackend
+    - name: blobstore
+      port: 25250
+      protocol: TCP
+      targetPort: blobstore
+    - name: nats
+      port: 4222
+      protocol: TCP
+      targetPort: nats
+    - name: powerdns
+      port: 8081
+      protocol: TCP
+      targetPort: powerdns
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: postgres
+    - name: dns-tcp
+      port: 53
+      protocol: TCP
+      targetPort: dns-tcp
+    - name: dns-udp
+      port: 53
+      protocol: UDP
+      targetPort: dns-udp
+    selector:
+      skiff-role-name: bosh
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List
+metadata: {}

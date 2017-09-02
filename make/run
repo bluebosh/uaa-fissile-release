@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 set -o errexit -o nounset
-
+set -x
 GIT_ROOT=${GIT_ROOT:-$(git rev-parse --show-toplevel)}
-NAMESPACE="uaa"
+NAMESPACE="cpi"
 
 has_namespace() {
     kubectl get namespace --output=name "${NAMESPACE}" >/dev/null 2>/dev/null
@@ -26,17 +26,17 @@ stampy "${GIT_ROOT}/uaa_metrics.csv" "$0" make-run::namespace end
 
 stampy "${GIT_ROOT}/uaa_metrics.csv" "$0" make-run::create start
 
-kubectl get storageclass persistent 2>/dev/null || {
-    perl -p -e 's@storage.k8s.io/v1beta1@storage.k8s.io/v1@g' \
-        "${GIT_ROOT}/kube-test/storage-class-host-path.yml" | \
-    kubectl create -f -
-}
+#kubectl get storageclass persistent 2>/dev/null || {
+#    perl -p -e 's@storage.k8s.io/v1beta1@storage.k8s.io/v1@g' \
+#        "${GIT_ROOT}/kube-test/storage-class-host-path.yml" | \
+#    kubectl create -f -
+#}
 
-source env/defaults.env
+#source env/defaults.env
 helm install helm \
-     --namespace "${NAMESPACE}" \
-     --set "env.DOMAIN=${DOMAIN}" \
-     --set "env.UAA_ADMIN_CLIENT_SECRET=${UAA_ADMIN_CLIENT_SECRET}"
+     --namespace "${NAMESPACE}"
+#     --set "env.DOMAIN=${DOMAIN}" \
+#     --set "env.UAA_ADMIN_CLIENT_SECRET=${UAA_ADMIN_CLIENT_SECRET}"
 
 stampy "${GIT_ROOT}/uaa_metrics.csv" "$0" make-run::create end
 

@@ -34,6 +34,47 @@ roles:
     shared-volumes: []
     memory: 4096
     virtual-cpus: 4
+    exposed-ports:
+      - name: director
+        protocol: TCP
+        external: 25555
+        internal: 25555
+        public: true
+      - name: director_backend
+        protocol: TCP
+        external: 25556
+        internal: 25556
+        public: true
+      - name: blobstore
+        protocol: TCP
+        external: 25250
+        internal: 25250
+        public: true
+      - name: nats
+        protocol: TCP
+        external: 4222
+        internal: 4222
+        public: true
+      - name: powerdns
+        protocol: TCP
+        external: 8081
+        internal: 8081
+        public: true
+      - name: postgres
+        protocol: TCP
+        external: 5432
+        internal: 5432
+        public: true
+      - name: dns-tcp
+        protocol: TCP
+        external: 53
+        internal: 53
+        public: true
+      - name: dns-udp
+        protocol: UDP
+        external: 53
+        internal: 53
+        public: true
 configuration:
   variables:
   - name: BLOB_AGENT_PASSWORD
