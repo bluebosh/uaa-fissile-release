@@ -22,7 +22,7 @@ properties:
     http:
       user: nats_http
     address: 127.0.0.1
-    user: nats_user
+    user: nats
   dns:
     address: 127.0.0.1
     local_address: 127.0.0.1
