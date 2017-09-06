@@ -16,12 +16,6 @@ roles:
     release_name: bosh
   - name: kubernetes_cpi
     release_name: kubernetes-cpi
-  processes:
-  - director
-  - blobstore
-  - nats
-  - postgres
-  - powerdns
   run:
     scaling:
       min: 1
@@ -77,20 +71,6 @@ roles:
         public: true
 configuration:
   variables:
-  - name: BLOB_AGENT_PASSWORD
-    secret: true
-    immutable: true
-    generator:
-      type: Password
-    description: The password for blob agent.
-    required: true
-  - name: BLOB_DIRECTOR_PASSWORD
-    secret: true
-    immutable: true
-    generator:
-      type: Password
-    description: The password for blob director.
-    required: true
   - name: CLUSTER_CERTIFICATE_AUTHORITY_DATA
     required: true
   - name: CLUSTER_NAME
@@ -124,47 +104,12 @@ configuration:
     generator:
       type: Password
     description: Password used for the monit API.
-  - name: NATS_HTTP_PASSWORD
-    secret: true
-    immutable: true
-    generator:
-      type: Password
-    description: The password for the nats http user.
-    required: true
-  - name: NATS_PASSWORD
-    secret: true
-    immutable: true
-    generator:
-      type: Password
-    description: The password for the nats user.
-    required: true
-  - name: POSTGRES_PASSWORD
-    secret: true
-    immutable: true
-    generator:
-      type: Password
-    description: The password for the postgres user.
-    required: true
-  - name: WEBSERVER_PASSWORD
-    secret: true
-    immutable: true
-    generator:
-      type: Password
-    description: The password for the webserver.
-    required: true
   templates:
     properties.fissile.monit.password: '"((MONIT_PASSWORD))"'
-    properties.nats.password: '"((NATS_PASSWORD))"'
-    properties.dns.db.password: '"((POSTGRES_PASSWORD))"'
-    properties.dns.webserver.password: '((WEBSERVER_PASSWORD))'
-    properties.director.db.password: '"((POSTGRES_PASSWORD))"'
+    properties.director.name: '"((KUBERNETES_NAMESPACE))"'
     properties.director.ssl.cert: ((DIRECTOR_CERT))
     properties.director.ssl.key: ((DIRECTOR_KEY))
-    properties.blobstore.agent.password: '"((BLOB_AGENT_PASSWORD))"'
-    properties.blobstore.director.password: '"((BLOB_DIRECTOR_PASSWORD))"'
-    properties.blobstore.address: '"bosh.((KUBERNETES_NAMESPACE)).svc.cluster.local"'
-    properties.blobstore.host: '"bosh.((KUBERNETES_NAMESPACE)).svc.cluster.local"'
-    properties.agent.mbus: '"nats://nats_user:((NATS_PASSWORD))@bosh.((KUBERNETES_NAMESPACE)).svc.cluster.local:4222"'
-    properties.nats.http.password: '"((NATS_HTTP_PASSWORD))"'
-    properties.postgres.password: '"((POSTGRES_PASSWORD))"'
+    properties.blobstore.address: '"bosh-public.((KUBERNETES_NAMESPACE)).svc.cluster.local"'
+    properties.blobstore.host: '"bosh-public.((KUBERNETES_NAMESPACE)).svc.cluster.local"'
+    properties.agent.mbus: '"nats://nats:nats-password@bosh-public.((KUBERNETES_NAMESPACE)).svc.cluster.local:4222"'
     properties.kubeconfig: '{"clusters": {"((CLUSTER_NAME))": {"certificate_authority_data": "((CLUSTER_CERTIFICATE_AUTHORITY_DATA))", "server": "((CLUSTER_SERVER))"}}, "contexts": {"((CLUSTER_NAME))": {"cluster": "((CLUSTER_NAME))", "namespace": "((KUBERNETES_NAMESPACE))", "user": "admin"}}, "current_context": "((CLUSTER_NAME))", "users": {"admin": {"auth_provider": "oidc", "client_id": "bx", "client_secret": "bx", "idp_issuer_url": "https://iam.ng.bluemix.net/kubernetes", "refresh_token": "((CLUSTER_REFRESH_TOKEN))", "token": "((CLUSTER_TOKEN))"}}}'

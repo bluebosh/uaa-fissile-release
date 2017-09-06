@@ -18,16 +18,6 @@ spec:
     spec:
       containers:
       - env:
-        - name: BLOB_AGENT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: blob-agent-password
-              name: secret-1
-        - name: BLOB_DIRECTOR_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: blob-director-password
-              name: secret-1
         - name: CLUSTER_CERTIFICATE_AUTHORITY_DATA
           value: {{ required "CLUSTER_CERTIFICATE_AUTHORITY_DATA configuration missing" .Values.env.CLUSTER_CERTIFICATE_AUTHORITY_DATA | quote }}
         - name: CLUSTER_NAME
@@ -53,31 +43,11 @@ spec:
             secretKeyRef:
               key: monit-password
               name: secret-1
-        - name: NATS_HTTP_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: nats-http-password
-              name: secret-1
-        - name: NATS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: nats-password
-              name: secret-1
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: postgres-password
-              name: secret-1
-        - name: WEBSERVER_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: webserver-password
-              name: secret-1
         - name: KUBERNETES_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: bluebosh/bosh-bosh:02bdb0c86d2edaaa8833abf4610998295e04cc9b
+        image: bluebosh/bosh-bosh:731b74e4ec8af113c0e4c98906170a8e0b8e5787
         livenessProbe:
           initialDelaySeconds: 600
           tcpSocket:

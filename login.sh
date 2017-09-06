@@ -1,4 +1,4 @@
-cluster_name=mycluster
+cluster_name=$1
 bx login --apikey bmdCQ6k1O7h2Ue5fc9Cyf3Sti2rJbBvIQCWEFX7BlOK5 -a api.ng.bluemix.net
 bx cs init
 

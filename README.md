@@ -1,25 +1,7 @@
-# UAA fissile release
+# BOSH Director fissile release
 
-This repository contains the files necessary to run a standalone UAA using fissile.
+This repository contains the files necessary to run a BOSH Director using fissile.
 It is roughly equivalent to doing the same with BOSH.
-
-## Prerequisites
-
-### A Kubernetes cluster
-
-[scf.git] has sample instructions for setting one up locally via hyperkube;
-other methods of deploying Kubernetes should work as well.
-
-[scf.git]: https://github.com/suse/scf/tree/master/docs/kube.md
-
-### docker
-Docker is required for [fissile] to build images.  You may also need access to a
-[docker registry] unless you're testing against a vagrant box or [minikube].  In
-the case of [minikube], reusing the [minikube docker daemon] may be useful.
-
-[docker registry]: https://github.com/docker/distribution
-[minikube]: https://kubernetes.io/docs/getting-started-guides/minikube/
-[minikube docker daemon]: https://kubernetes.io/docs/getting-started-guides/minikube/#reusing-the-docker-daemon
 
 ### fissile
 
@@ -53,20 +35,6 @@ Required to create certificates. Requires golang.
 ```sh
 go get github.com/square/certstrap
 ```
-
-### stampy
-
-Used to write timing information to a file. This information can be used to identify
-slow parts of the process when trying to make things faster.
-
-Requires golang.
-```sh
-go get -d github.com/SUSE/stampy
-cd $GOPATH/src/github.com/SUSE/stampy
-make
-cp build/linux-amd64/stampy $GOBIN/stampy
-```
-
 ## Building
 
 1. Get all submodules:

@@ -9,8 +9,8 @@ fi
 
 NAMESPACE=$2
 if [[ $NAMESPACE = "" ]]; then
-    echo "[WARNING] You didn't specify your namespace as the second argument, use cpi as default."
-    NAMESPACE=cpi
+    echo "[WARNING] You didn't specify your namespace as the second argument, use bosh as default."
+    NAMESPACE=bosh
 fi
 
 echo

@@ -7,7 +7,7 @@ if [[ $cluster_name = "" ]]; then
     exit 1
 fi
 
-init=$2
+init=$3
 
 echo "[INFO] Deploy Start!!!"
 
@@ -22,9 +22,11 @@ if [ "$init" != "" ]; then
 	echo "[INFO] make releases"
 	make releases
 
+	set +e
 	echo
 	echo "[INFO] clean iamges"
 	./docker_rm.sh
+	set -e
 
 	echo
 	echo "[INFO] make images"

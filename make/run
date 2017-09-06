@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
+set -ex
 
-set -o errexit -o nounset
-set -x
 GIT_ROOT=${GIT_ROOT:-$(git rev-parse --show-toplevel)}
-NAMESPACE="cpi"
+
+NAMESPACE=$2
+if [[ $NAMESPACE = "" ]]; then
+    echo "[WARNING] You didn't specify your namespace as the second argument, use bosh as default."
+    NAMESPACE=bosh
+fi
 
 has_namespace() {
     kubectl get namespace --output=name "${NAMESPACE}" >/dev/null 2>/dev/null
 }
 
-stampy "${GIT_ROOT}/uaa_metrics.csv" "$0" make-run start
-
-stampy "${GIT_ROOT}/uaa_metrics.csv" "$0" make-run::namespace start
 if has_namespace ; then
     kubectl delete namespace "${NAMESPACE}"
 fi
@@ -22,9 +23,6 @@ while has_namespace ; do
 done
 
 kubectl create namespace "${NAMESPACE}"
-stampy "${GIT_ROOT}/uaa_metrics.csv" "$0" make-run::namespace end
-
-stampy "${GIT_ROOT}/uaa_metrics.csv" "$0" make-run::create start
 
 #kubectl get storageclass persistent 2>/dev/null || {
 #    perl -p -e 's@storage.k8s.io/v1beta1@storage.k8s.io/v1@g' \
@@ -57,6 +55,3 @@ helm install helm \
      --set "env.CLUSTER_REFRESH_TOKEN=${CLUSTER_REFRESH_TOKEN}" \
      --set "env.CLUSTER_TOKEN=${CLUSTER_TOKEN}"
 
-stampy "${GIT_ROOT}/uaa_metrics.csv" "$0" make-run::create end
-
-stampy "${GIT_ROOT}/uaa_metrics.csv" "$0" make-run 'done'

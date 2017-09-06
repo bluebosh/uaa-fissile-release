@@ -6,8 +6,18 @@ while read line; do
 done <<< "$image_list"
 }
 
+echo "[INFO] Remove docker images..."
 image_name="bluebosh/bosh-bosh"
 remove_images $image_name
 echo
 image_name="bosh-role-packages"
 remove_images $image_name
+
+echo "[INFO] Remove helm releases..."
+helm_list=`helm list | awk -F ' ' '{print $1}'`
+while read line; do
+	echo "[INFO] Deleting helm $line"
+	helm delete $line
+	echo "[INFO] Completed delete $line"
+	echo
+done <<< "$helm_list"

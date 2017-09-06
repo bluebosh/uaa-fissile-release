@@ -8,3 +8,7 @@
 /.idea
 /.DS_Store
 uaa_metrics.csv
+/login.sh
+/helm/
+/kube/
+/output/
