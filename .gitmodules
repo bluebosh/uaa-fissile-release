@@ -1,6 +1,0 @@
-[submodule "src/bosh"]
-	path = src/bosh
-	url = https://github.com/cloudfoundry/bosh
-[submodule "src/kubernetes-cpi-release"]
-	path = src/kubernetes-cpi-release
-	url = git@github.ibm.com:Bluemix/kubernetes-cpi-release.git
