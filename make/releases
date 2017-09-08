@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -o errexit -o nounset
+
+GIT_ROOT=${GIT_ROOT:-$(git rev-parse --show-toplevel)}
+
+cd "$GIT_ROOT"
+
+${GIT_ROOT}/bin/create-release.sh  src/postgres-release  postgres
+
+${GIT_ROOT}/bin/create-release.sh  src/uaa-release  uaa
+${GIT_ROOT}/bin/create-release.sh  src/hcf-release  hcf

@@ -1,0 +1,20 @@
+---
+properties:
+  fissile:
+    monit:
+      password: ~
+  login:
+    saml:
+      serviceProviderKey: ~
+  uaa:
+    admin:
+      client_secret: ~
+    clients:
+      default_zone_admin:
+        secret: ~
+    jwt:
+      policy:
+        keys:
+          default:
+            signingKey: ~
+    sslPrivateKey: ~

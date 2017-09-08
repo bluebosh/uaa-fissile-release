@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+case $1 in
+  status) echo nothing to commit ;;
+  *) exec /usr/bin/git "$@" ;;
+esac

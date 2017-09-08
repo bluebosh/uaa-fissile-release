@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -o errexit -o nounset
+
+GIT_ROOT=${GIT_ROOT:-$(git rev-parse --show-toplevel)}
+cd "${GIT_ROOT}"
+source .envrc
+
+ENV_FILES="$(echo env/*.env)"
+
+CREATE_HELM_CHART=false
+BUILD_TARGET=kube
+
+if [ "${1:-}" = "helm" ]; then
+    CREATE_HELM_CHART=true
+    BUILD_TARGET=helm
+    ENV_FILES=env/certs.env
+fi
+
+rm -rf "${BUILD_TARGET}"
+
+# TODO: We currently skip memory limits for development purposes
+fissile build "${BUILD_TARGET}" \
+    --output-dir="${BUILD_TARGET}" \
+    --defaults-file="$(echo "${ENV_FILES}" | tr ' ' ,)" \
+    --use-memory-limits=false

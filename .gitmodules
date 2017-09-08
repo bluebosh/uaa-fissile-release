@@ -1,0 +1,6 @@
+[submodule "src/uaa-release"]
+	path = src/uaa-release
+	url = https://github.com/cloudfoundry/uaa-release.git
+[submodule "src/postgres-release"]
+	path = src/postgres-release
+	url = https://github.com/cloudfoundry/postgres-release

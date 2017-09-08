@@ -1,0 +1,22 @@
+---
+properties:
+  fissile:
+    monit:
+      user: admin
+      port: 2289
+  uaa:
+    jwt:
+      policy:
+        active_key_id: default
+    logging_level: INFO
+  databases:
+    databases:
+    - {name: uaadb, tag: uaa, citext: true}
+    port: 5524
+    roles:
+    - {name: uaaadmin, password: passw0rd, tag: admin}
+  uaadb:
+    databases:
+    - name: uaadb
+      tag: uaa
+    db_scheme: postgresql

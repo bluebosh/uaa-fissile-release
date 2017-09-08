@@ -1,0 +1,141 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    skiff-role-name: uaa
+  name: uaa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      skiff-role-name: uaa
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        skiff-role-name: uaa
+      name: uaa
+    spec:
+      containers:
+      - env:
+        - name: DOMAIN
+          value: {{ required "DOMAIN configuration missing" .Values.env.DOMAIN | quote }}
+        - name: HCP_SERVICE_DOMAIN_SUFFIX
+          value: {{ .Values.env.HCP_SERVICE_DOMAIN_SUFFIX | quote }}
+        - name: JWT_SIGNING_PEM
+          value: {{ .Values.env.JWT_SIGNING_PEM | quote }}
+        - name: MONIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: monit-password
+              name: secret-1
+        - name: POSTGRES_PORT
+          value: {{ .Values.env.POSTGRES_PORT | quote }}
+        - name: SAML_SERVICEPROVIDER_CERT
+          valueFrom:
+            secretKeyRef:
+              key: saml-serviceprovider-cert
+              name: secret-1
+        - name: SAML_SERVICEPROVIDER_KEY
+          valueFrom:
+            secretKeyRef:
+              key: saml-serviceprovider-key
+              name: secret-1
+        - name: UAADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: uaadb-password
+              name: secret-1
+        - name: UAA_ADMIN_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: uaa-admin-client-secret
+              name: secret-1
+        - name: UAA_SERVER_CERT
+          valueFrom:
+            secretKeyRef:
+              key: uaa-server-cert
+              name: secret-1
+        - name: UAA_SERVER_KEY
+          valueFrom:
+            secretKeyRef:
+              key: uaa-server-key
+              name: secret-1
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: bluebosh/bcf-uaa:0d74d668d59e65da2715a8e97d4ae9f82b3ff0df
+        livenessProbe:
+          initialDelaySeconds: 1800
+          periodSeconds: 60
+          tcpSocket:
+            port: 2289
+        name: uaa
+        ports:
+        - containerPort: 8080
+          name: uaa
+          protocol: TCP
+        - containerPort: 8443
+          name: uaa-ssl
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            httpHeaders:
+            - name: Host
+              value: uaa
+            - name: Accept
+              value: application/json
+            path: /info
+            port: 8443
+            scheme: HTTPS
+        resources: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: uaa
+  spec:
+    ports:
+    - name: uaa
+      port: 8080
+      protocol: TCP
+      targetPort: uaa
+    - name: uaa-ssl
+      port: 2793
+      protocol: TCP
+      targetPort: uaa-ssl
+    selector:
+      skiff-role-name: uaa
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: uaa-public
+  spec:
+    externalIPs:
+    - {{ .Values.kube.external_ip | quote }}
+    ports:
+    - name: uaa-ssl
+      port: 2793
+      protocol: TCP
+      targetPort: uaa-ssl
+    selector:
+      skiff-role-name: uaa
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List
+metadata: {}
